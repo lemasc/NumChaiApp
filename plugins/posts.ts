@@ -34,7 +34,7 @@ export const usePost = (postId: string | null) => {
 export const useLeaderboard = () => {
   return useSWR("leaderboard", () => {
     return pb.collection("posts").getFullList<Document<Leaderboard>>({
-      sort: "-likes",
+      sort: "-likes,-created",
       fields: "id,title,likes,created,updated",
     });
   });
