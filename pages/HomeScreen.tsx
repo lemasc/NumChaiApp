@@ -6,11 +6,13 @@ import {
   View,
   RefreshControl,
   Button,
+  StyleSheet,
 } from "react-native";
 import dayjs from "../plugins/dayjs";
-import pb from "../plugins/pocketbase";
 import { usePostLists } from "../plugins/posts";
 import { Post } from "../types/post";
+
+import { FAB } from "react-native-paper";
 
 function PostComponent({ item }: { item: Post }) {
   return (
@@ -34,7 +36,7 @@ function PostComponent({ item }: { item: Post }) {
 function HomeScreen({ navigation }) {
   const { data, isLoading, mutate } = usePostLists();
   return (
-    <View style={{ padding: 18 }}>
+    <View style={{ padding: 18, height: "100%" }}>
       <FlatList
         data={data}
         renderItem={PostComponent}
@@ -43,8 +45,22 @@ function HomeScreen({ navigation }) {
         }
         keyExtractor={(item) => item.id}
       />
+      <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={() => navigation.navigate("Add")}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  fab: {
+    position: "absolute",
+    margin: 20,
+    right: 0,
+    bottom: 0,
+  },
+});
 
 export default HomeScreen;
