@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { View, Button, TextInput, StyleSheet, Text } from "react-native";
 import pb from "../plugins/pocketbase";
+import { useSWRConfig } from "swr";
+import { Post } from "../types/post";
+import { N } from "../types/navigation";
 
-export default function AddScreen({ navigation }) {
+export default function AddScreen({ navigation }: N<"Add">) {
+  const { mutate } = useSWRConfig();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -10,19 +14,17 @@ export default function AddScreen({ navigation }) {
     navigation.navigate("Home");
   };
 
-  const getData = async () => {};
-
   const post = async () => {
     const newPost = {
       title,
       content,
     };
-    const record = await pb.collection("todo").create(newPost);
+    const record = await pb.collection("posts").create<Post>(newPost);
     console.log(record);
     setTitle("");
     setContent("");
-    getData();
-    navigation.goBack("Home");
+    mutate("posts");
+    navigation.navigate("Home");
   };
 
   const styles = StyleSheet.create({
@@ -33,11 +35,12 @@ export default function AddScreen({ navigation }) {
     },
 
     title: {
-      height: 40,
+      height: 50,
       margin: 12,
       borderWidth: 1,
       padding: 10,
       fontSize: 15,
+      borderRadius: 10
     },
 
     content: {
@@ -46,12 +49,14 @@ export default function AddScreen({ navigation }) {
       padding: 10,
       height: 120,
       fontSize: 15,
+      borderRadius: 10
     },
 
     btn: {
       width: "100%",
       flexDirection: "row",
       alignItems: "stretch",
+
     },
   });
 
