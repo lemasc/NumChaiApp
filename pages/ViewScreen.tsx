@@ -12,6 +12,7 @@ import {
   Image,
   Pressable,
   ScrollView,
+  Alert,
 } from "react-native";
 import { usePost } from "../plugins/posts";
 import { useSWRConfig } from "swr";
@@ -25,19 +26,44 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
   if (!post) {
     return null;
   }
+
+  const deletePost = async () => {
+    Alert.alert("", "คุณต้องการจะลบโพสต์นี้ใช่หรือไม่", [
+      {
+        style: "cancel",
+        text: "ยกเลิก",
+      },
+      {
+        text: "ลบ",
+        onPress: async () => {
+          await pb.collection("posts").delete(post.id);
+          mutate("posts");
+          navigation.goBack();
+        },
+      },
+    ]);
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         return (
-          <Pressable
-            onPress={() => {
-              navigation.navigate("Edit", {
-                postId,
-              });
-            }}
-          >
-            <Text>Edit</Text>
-          </Pressable>
+          <View style={{ flexDirection: "row" }}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Edit", {
+                  postId,
+                });
+              }}
+              style={styles.HeaderRightBtn}
+            >
+              <AntDesign name="edit" size={20} />
+            </Pressable>
+
+            <Pressable style={styles.HeaderRightBtn} onPress={deletePost}>
+              <AntDesign name="delete" size={20} />
+            </Pressable>
+          </View>
         );
       },
     });
@@ -52,8 +78,8 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       marginHorizontal: 20,
       borderRadius: 10,
       textAlignVertical: "center",
-      fontWeight: "bold",
       paddingVertical: 10,
+      fontFamily: "Athiti_700Bold",
     },
 
     Content: {
@@ -65,6 +91,15 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
     },
     View: {
       backgroundColor: "#F3E9E9",
+    },
+    HeaderRightBtn: {
+      padding: 10,
+    },
+
+    Count: {
+      marginRight: 8,
+      fontSize: 20,
+      fontFamily: "Athiti_400Regular",
     },
   });
 
@@ -83,11 +118,27 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
     <ScrollView style={styles.View}>
       <Text style={styles.Title}>{post.title}</Text>
       <View style={styles.Content}>
-        <Text>{dayjs(post.created).format("LLL น.")}</Text>
-        <Text>{post.content}</Text>
+        <Text
+          style={{
+            fontFamily: "Athiti_400Regular",
+            fontSize: 16,
+            color: "gray",
+            paddingVertical: 5,
+          }}
+        >
+          {dayjs(post.created).format("LLL น.")}
+        </Text>
+        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
+          {post.content}
+        </Text>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <TouchableOpacity style={{}}>
-            <AntDesign name="like2" size={24} color="black" />
+          <Text style={styles.Count}>{post.likes}</Text>
+          <TouchableOpacity onPressOut={onPressLike}>
+            <AntDesign
+              name={recentlyAddLikes ? "like1" : "like2"}
+              size={24}
+              color="black"
+            />
           </TouchableOpacity>
         </View>
       </View>

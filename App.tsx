@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -10,8 +10,8 @@ import { theme } from "./plugins/theme";
 import { SWRConfig } from "swr";
 import { swrConfig } from "./plugins/swr";
 import EditScreen from "./pages/EditScreen";
+import * as SplashScreen from "expo-splash-screen";
 
-import AppLoading from "expo-app-loading";
 import {
   useFonts,
   Athiti_200ExtraLight,
@@ -33,10 +33,17 @@ export default function App() {
     Athiti_600SemiBold,
     Athiti_700Bold,
   });
-  
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
+
+  useEffect(() => {
+    SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
   return (
     <SWRConfig value={swrConfig}>
       <PaperProvider theme={theme}>
@@ -45,7 +52,7 @@ export default function App() {
             <Stack.Screen
               name="Home"
               component={HomeScreen}
-              options={{ title: "Home" }}
+              options={{ title: "Home", headerBackButtonMenuEnabled: false }}
             />
             <Stack.Screen
               name="Add"

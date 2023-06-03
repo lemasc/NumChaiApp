@@ -34,16 +34,24 @@ function PostComponent({
         <Text
           style={{
             fontSize: 24,
-            paddingBottom: 10,
             fontFamily: "Athiti_700Bold", // Use the Athiti_700Bold font
           }}
         >
           {item.title}
         </Text>
-        <Text style={{ fontFamily: "Athiti_400Regular" }}>
+        <Text
+          style={{
+            fontFamily: "Athiti_400Regular",
+            fontSize: 16,
+            color: "gray",
+            paddingVertical: 5,
+          }}
+        >
           สร้างเมื่อ {dayjs(item.created).format("LLL น.")}
         </Text>
-        <Text>{item.content}</Text>
+        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
+          {item.content}
+        </Text>
       </View>
     </Pressable>
   );
