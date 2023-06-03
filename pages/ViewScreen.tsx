@@ -52,8 +52,8 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       marginHorizontal: 20,
       borderRadius: 10,
       textAlignVertical: "center",
-      fontWeight: "bold",
       paddingVertical: 10,
+      fontFamily: "Athiti_700Bold",
     },
 
     Content: {
@@ -65,6 +65,12 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
     },
     View: {
       backgroundColor: "#F3E9E9",
+    },
+
+    Count: {
+      marginRight: 8,
+      fontSize: 20,
+      fontFamily: "Athiti_400Regular",
     },
   });
 
@@ -83,11 +89,20 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
     <ScrollView style={styles.View}>
       <Text style={styles.Title}>{post.title}</Text>
       <View style={styles.Content}>
-        <Text>{dayjs(post.created).format("LLL น.")}</Text>
-        <Text>{post.content}</Text>
+        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
+          {dayjs(post.created).format("LLL น.")}
+        </Text>
+        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
+          {post.content}
+        </Text>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <TouchableOpacity style={{}}>
-            <AntDesign name="like2" size={24} color="black" />
+          <Text style={styles.Count}>{post.likes}</Text>
+          <TouchableOpacity style={{}} onPressOut={onPressLike}>
+            <AntDesign
+              name={recentlyAddLikes ? "like1" : "like2"}
+              size={24}
+              color="black"
+            />
           </TouchableOpacity>
         </View>
       </View>

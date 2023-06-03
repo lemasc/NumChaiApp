@@ -40,10 +40,12 @@ function PostComponent({
         >
           {item.title}
         </Text>
-        <Text style={{ fontFamily: "Athiti_400Regular" }}>
+        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
           สร้างเมื่อ {dayjs(item.created).format("LLL น.")}
         </Text>
-        <Text>{item.content}</Text>
+        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
+          {item.content}
+        </Text>
       </View>
     </Pressable>
   );
@@ -60,6 +62,7 @@ function HomeScreen({ navigation, route }: N<"Home">) {
     <View style={{ height: "100%", backgroundColor: "#F3E9E9" }}>
       <View style={{ padding: 20 }}>
         <TextInput
+          style={{ fontFamily: "Athiti_400Regular" }}
           label="ค้นหา"
           value={search}
           onChangeText={(text) => setSearch(text.trim())}

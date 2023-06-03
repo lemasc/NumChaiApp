@@ -48,10 +48,10 @@ export default function AddScreen({
 
   const styles = StyleSheet.create({
     header: {
+      fontFamily: "Athiti_700Bold",
       textAlign: "center",
       fontSize: 25,
       marginTop: 25,
-      fontWeight: "bold",
     },
 
     title: {
