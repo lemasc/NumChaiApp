@@ -1,11 +1,32 @@
-import useSWR from "swr";
-import { Post, Document } from "../types/post";
+import { useEffect } from "react";
+import useSWR, { useSWRConfig } from "swr";
+import { Document, Post } from "../types/post";
 import pb from "./pocketbase";
 
 export const usePostLists = () => {
-  return useSWR("posts", () => {
+  const { mutate } = useSWRConfig();
+  const { data, ...rest } = useSWR("posts", () => {
     return pb.collection("posts").getFullList<Document<Post>>({
       sort: "-created",
     });
+  });
+  useEffect(() => {
+    if (data) {
+      data.map((item) => {
+        mutate(["posts", item.id], item, {
+          revalidate: false,
+        });
+      });
+    }
+  }, [data]);
+  return {
+    data,
+    ...rest,
+  };
+};
+
+export const usePost = (postId: string | null) => {
+  return useSWR(postId ? ["posts", postId] : null, (postId: string) => {
+    return pb.collection("posts").getOne<Document<Post>>(postId);
   });
 };
