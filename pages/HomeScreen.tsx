@@ -14,6 +14,11 @@ import { usePostLists } from "../plugins/posts";
 import { Post, Document } from "../types/post";
 import { N } from "../types/navigation";
 import { FAB } from "react-native-paper";
+import {
+  useFonts,
+  Athiti_400Regular,
+  Athiti_700Bold,
+} from "@expo-google-fonts/athiti";
 
 function PostComponent({
   item,
@@ -31,10 +36,18 @@ function PostComponent({
           marginBottom: 20,
         }}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 24, paddingBottom: 10 }}>
+        <Text
+          style={{
+            fontSize: 24,
+            paddingBottom: 10,
+            fontFamily: "Athiti_700Bold", // Use the Athiti_700Bold font
+          }}
+        >
           {item.title}
         </Text>
-        <Text>สร้างเมื่อ {dayjs(item.created).format("LLL น.")}</Text>
+        <Text style={{ fontFamily: "Athiti_400Regular" }}>
+          สร้างเมื่อ {dayjs(item.created).format("LLL น.")}
+        </Text>
         <Text>{item.content}</Text>
       </View>
     </Pressable>
@@ -44,7 +57,7 @@ function PostComponent({
 function HomeScreen({ navigation, route }: N<"Home">) {
   const { data, isLoading, mutate } = usePostLists();
   return (
-    <View style={{ height: "100%" }}>
+    <View style={{ height: "100%", backgroundColor: "#F3E9E9" }}>
       <FlatList
         style={{ padding: 18, paddingBottom: 20 }}
         data={data}

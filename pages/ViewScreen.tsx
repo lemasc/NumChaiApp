@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
 import pb from "../plugins/pocketbase";
 import { N } from "../types/navigation";
 import { Post, Document } from "../types/post";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import dayjs from "../plugins/dayjs";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function ViewScreen({ navigation, route }: N<"View">) {
   const [post, setPost] = useState<Document<Post>>();
@@ -22,6 +23,8 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
   }
 
   const styles = StyleSheet.create({
+    
+
     Title: {
       textAlign: "center",
       fontSize: 25,
@@ -31,7 +34,7 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       borderRadius: 10,
       textAlignVertical: "center",
       fontWeight: "bold",
-       paddingVertical: 10
+      paddingVertical: 10,
     },
 
     Content: {
@@ -41,31 +44,23 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       borderRadius: 10,
       padding: 15,
     },
+    View: {
+      backgroundColor: "#F3E9E9"
+    }
   });
 
   return (
-    <View>
+    <ScrollView style={styles.View}>
       <Text style={styles.Title}>{post.title}</Text>
       <View style={styles.Content}>
         <Text>{dayjs(post.created).format("LLL น.")}</Text>
         <Text>{post.content}</Text>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <TouchableOpacity style={{}}>
-            <Image
-              source={{
-                uri: "https://seeklogo.com/images/F/facebook-like-logo-32FAB6926D-seeklogo.com.png",
-              }}
-              style={{
-                width: 30,
-                height: 30,
-                marginVertical: 5,
-                marginEnd: 18
-              }}
-              resizeMode={"contain"}
-            />
+            <AntDesign name="like2" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

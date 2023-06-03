@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import { View, StyleSheet, Text, Alert, ScrollView } from "react-native";
 
 import { TextInput, Button } from "react-native-paper";
 import pb from "../plugins/pocketbase";
@@ -79,7 +79,7 @@ export default function AddScreen({
   });
 
   return (
-    <View>
+    <ScrollView style={{ backgroundColor: "#F3E9E9" }}>
       <Text style={styles.header}>{post ? "แก้ไข" : "เพิ่ม"}โพสต์</Text>
 
       <TextInput
@@ -99,7 +99,11 @@ export default function AddScreen({
 
       <View style={styles.btn}>
         <View style={styles.btnWrapper}>
-          <Button mode="outlined" onPress={cancel}>
+          <Button
+            mode="outlined"
+            style={{ backgroundColor: "white" }}
+            onPress={cancel}
+          >
             ยกเลิก
           </Button>
         </View>
@@ -110,6 +114,6 @@ export default function AddScreen({
           </Button>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

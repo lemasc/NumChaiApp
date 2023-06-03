@@ -10,9 +10,32 @@ import { theme } from "./plugins/theme";
 import { SWRConfig } from "swr";
 import { swrConfig } from "./plugins/swr";
 
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Athiti_200ExtraLight,
+  Athiti_300Light,
+  Athiti_400Regular,
+  Athiti_500Medium,
+  Athiti_600SemiBold,
+  Athiti_700Bold,
+} from "@expo-google-fonts/athiti";
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Athiti_200ExtraLight,
+    Athiti_300Light,
+    Athiti_400Regular,
+    Athiti_500Medium,
+    Athiti_600SemiBold,
+    Athiti_700Bold,
+  });
+  
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
     <SWRConfig value={swrConfig}>
       <PaperProvider theme={theme}>
