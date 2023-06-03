@@ -22,12 +22,10 @@ export default function AddScreen({
   };
 
   useEffect(() => {
-    return () => {
-      if (post) {
-        setTitle(post.title);
-        setContent(post.content);
-      }
-    };
+    if (post) {
+      setTitle(post.title);
+      setContent(post.content);
+    }
   }, [post]);
 
   const submitPost = async () => {
@@ -39,8 +37,11 @@ export default function AddScreen({
       title,
       content,
     };
-    const record = await pb.collection("posts").create(newPost);
-    console.log(record);
+    if (post) {
+      await pb.collection("posts").update(post.id, newPost);
+    } else {
+      await pb.collection("posts").create(newPost);
+    }
     mutate("posts");
     navigation.goBack();
   };
@@ -86,15 +87,16 @@ export default function AddScreen({
         style={styles.title}
         onChangeText={setTitle}
         value={title}
-        placeholder="ชื่อเรื่อง"
+        label="ชื่อเรื่อง"
       />
 
       <TextInput
         style={styles.content}
         onChangeText={setContent}
         value={content}
-        placeholder="เนื้อหา"
+        label="เนื้อหา"
         multiline
+        numberOfLines={5}
       />
 
       <View style={styles.btn}>

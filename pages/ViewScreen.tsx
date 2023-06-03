@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from "react";
-import pb from "../plugins/pocketbase";
+import React, { useLayoutEffect } from "react";
 import { N } from "../types/navigation";
-import { Post, Document } from "../types/post";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Pressable,
+} from "react-native";
 import dayjs from "../plugins/dayjs";
+import { usePost } from "../plugins/posts";
 
 export default function ViewScreen({ navigation, route }: N<"View">) {
-  const [post, setPost] = useState<Document<Post>>();
   const { postId } = route.params ?? {};
-  const getData = async () => {
-    const post = await pb.collection("posts").getOne<Document<Post>>(postId);
-    setPost(post);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const { data: post } = usePost(postId ?? null);
 
   if (!post) {
     return null;
   }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Edit", {
+                postId,
+              });
+            }}
+          >
+            <Text>Edit</Text>
+          </Pressable>
+        );
+      },
+    });
+  }, [postId]);
 
   const styles = StyleSheet.create({
     Title: {
@@ -31,7 +46,7 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       borderRadius: 10,
       textAlignVertical: "center",
       fontWeight: "bold",
-       paddingVertical: 10
+      paddingVertical: 10,
     },
 
     Content: {
@@ -59,7 +74,7 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
                 width: 30,
                 height: 30,
                 marginVertical: 5,
-                marginEnd: 18
+                marginEnd: 18,
               }}
               resizeMode={"contain"}
             />

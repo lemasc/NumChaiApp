@@ -9,6 +9,7 @@ import ViewScreen from "./pages/ViewScreen";
 import { theme } from "./plugins/theme";
 import { SWRConfig } from "swr";
 import { swrConfig } from "./plugins/swr";
+import EditScreen from "./pages/EditScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -28,7 +29,11 @@ export default function App() {
               component={AddScreen}
               options={{ title: "Add" }}
             />
-
+            <Stack.Screen
+              name="Edit"
+              component={EditScreen}
+              options={{ title: "Edit" }}
+            />
             <Stack.Screen
               name="View"
               component={ViewScreen}
