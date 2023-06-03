@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./pages/HomeScreen";
 import { RootStackParamList } from "./types/navigation";
+import AddScreen from "./pages/AddScreen";
 import { theme } from "./plugins/theme";
 import { SWRConfig } from "swr";
 import { swrConfig } from "./plugins/swr";
@@ -20,6 +21,11 @@ export default function App() {
               name="Home"
               component={HomeScreen}
               options={{ title: "Home", headerShown: false }}
+            />
+            <Stack.Screen
+              name="Add"
+              component={AddScreen}
+              options={{ title: "Add" }}
             />
           </Stack.Navigator>
         </NavigationContainer>
