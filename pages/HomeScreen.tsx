@@ -52,7 +52,6 @@ function HomeScreen({ navigation, route }: N<"Home">) {
           <PostComponent
             item={item}
             onPress={() => {
-              console.log("HWEL");
               navigation.navigate("View", {
                 postId: item.id,
               });
