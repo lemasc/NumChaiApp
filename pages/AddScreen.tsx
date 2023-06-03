@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import { View, StyleSheet, Text, Alert, ScrollView } from "react-native";
 
 import { TextInput, Button } from "react-native-paper";
 import { useSWRConfig } from "swr";
@@ -22,12 +22,10 @@ export default function AddScreen({
   };
 
   useEffect(() => {
-    return () => {
-      if (post) {
-        setTitle(post.title);
-        setContent(post.content);
-      }
-    };
+    if (post) {
+      setTitle(post.title);
+      setContent(post.content);
+    }
   }, [post]);
 
   const submitPost = async () => {
@@ -39,8 +37,11 @@ export default function AddScreen({
       title,
       content,
     };
-    const record = await pb.collection("posts").create(newPost);
-    console.log(record);
+    if (post) {
+      await pb.collection("posts").update(post.id, newPost);
+    } else {
+      await pb.collection("posts").create(newPost);
+    }
     mutate("posts");
     navigation.goBack();
   };
@@ -79,27 +80,32 @@ export default function AddScreen({
   });
 
   return (
-    <View>
+    <ScrollView style={{ backgroundColor: "#F3E9E9" }}>
       <Text style={styles.header}>{post ? "แก้ไข" : "เพิ่ม"}โพสต์</Text>
 
       <TextInput
         style={styles.title}
         onChangeText={setTitle}
         value={title}
-        placeholder="ชื่อเรื่อง"
+        label="ชื่อเรื่อง"
       />
 
       <TextInput
         style={styles.content}
         onChangeText={setContent}
         value={content}
-        placeholder="เนื้อหา"
+        label="เนื้อหา"
         multiline
+        numberOfLines={5}
       />
 
       <View style={styles.btn}>
         <View style={styles.btnWrapper}>
-          <Button mode="outlined" onPress={cancel}>
+          <Button
+            mode="outlined"
+            style={{ backgroundColor: "white" }}
+            onPress={cancel}
+          >
             ยกเลิก
           </Button>
         </View>
@@ -110,6 +116,6 @@ export default function AddScreen({
           </Button>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

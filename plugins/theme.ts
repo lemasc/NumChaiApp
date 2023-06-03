@@ -6,6 +6,7 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
   adaptNavigationTheme,
+  configureFonts,
 } from "react-native-paper";
 import merge from "deepmerge";
 
@@ -14,4 +15,6 @@ const { LightTheme } = adaptNavigationTheme({
   reactNavigationDark: NavigationDarkTheme,
 });
 
-export const theme = merge(MD3LightTheme, LightTheme);
+const theme = merge(MD3LightTheme, LightTheme);
+
+export { theme };

@@ -9,10 +9,34 @@ import ViewScreen from "./pages/ViewScreen";
 import { theme } from "./plugins/theme";
 import { SWRConfig } from "swr";
 import { swrConfig } from "./plugins/swr";
+import EditScreen from "./pages/EditScreen";
+
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Athiti_200ExtraLight,
+  Athiti_300Light,
+  Athiti_400Regular,
+  Athiti_500Medium,
+  Athiti_600SemiBold,
+  Athiti_700Bold,
+} from "@expo-google-fonts/athiti";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Athiti_200ExtraLight,
+    Athiti_300Light,
+    Athiti_400Regular,
+    Athiti_500Medium,
+    Athiti_600SemiBold,
+    Athiti_700Bold,
+  });
+  
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
     <SWRConfig value={swrConfig}>
       <PaperProvider theme={theme}>
@@ -28,7 +52,11 @@ export default function App() {
               component={AddScreen}
               options={{ title: "Add" }}
             />
-
+            <Stack.Screen
+              name="Edit"
+              component={EditScreen}
+              options={{ title: "Edit" }}
+            />
             <Stack.Screen
               name="View"
               component={ViewScreen}

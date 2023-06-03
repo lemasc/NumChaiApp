@@ -7,4 +7,5 @@ export type Document<T extends Record<string, unknown>> = T & {
 export type Post = {
   title: string;
   content: string;
+  likes: number;
 };
