@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { Document, Post } from "../types/post";
+import { Document, Leaderboard, Post } from "../types/post";
 import pb from "./pocketbase";
 
 export const usePostLists = () => {
@@ -28,5 +28,14 @@ export const usePostLists = () => {
 export const usePost = (postId: string | null) => {
   return useSWR(postId ? ["posts", postId] : null, (postId: string) => {
     return pb.collection("posts").getOne<Document<Post>>(postId);
+  });
+};
+
+export const useLeaderboard = () => {
+  return useSWR("leaderboard", () => {
+    return pb.collection("posts").getFullList<Document<Leaderboard>>({
+      sort: "-likes",
+      fields: "id,title,likes,created,updated",
+    });
   });
 };

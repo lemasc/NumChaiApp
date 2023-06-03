@@ -22,6 +22,7 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
   const { mutate } = useSWRConfig();
   const { data: post } = usePost(postId ?? null);
   const [recentlyAddLikes, setRecentlyPressLike] = useState(false);
+  const [recentlyAddDisLikes, setRecentlyPressDisLike] = useState(false);
 
   if (!post) {
     return null;
@@ -36,7 +37,9 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       {
         text: "ลบ",
         onPress: async () => {
-          await pb.collection("posts").delete(post.id);
+          try {
+            await pb.collection("posts").delete(post.id);
+          } catch {}
           mutate("posts");
           navigation.goBack();
         },
@@ -71,14 +74,13 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
 
   const styles = StyleSheet.create({
     Title: {
-      textAlign: "center",
       fontSize: 25,
       marginTop: 15,
       backgroundColor: "white",
       marginHorizontal: 20,
       borderRadius: 10,
       textAlignVertical: "center",
-      paddingVertical: 10,
+      padding: 20,
       fontFamily: "Athiti_700Bold",
     },
 
@@ -107,11 +109,26 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
     const updateData: Partial<Post> = {
       likes: recentlyAddLikes ? post.likes - 1 : post.likes + 1,
     };
-    mutate(
-      ["posts", post.id],
-      await pb.collection("posts").update(post.id, updateData)
-    );
+    try {
+      mutate(
+        ["posts", post.id],
+        await pb.collection("posts").update(post.id, updateData)
+      );
+    } catch {}
     setRecentlyPressLike((v) => !v);
+  };
+
+  const onPressDisLike = async () => {
+    const updateData: Partial<Post> = {
+      dislikes: recentlyAddDisLikes ? post.dislikes - 1 : post.dislikes + 1,
+    };
+    try {
+      mutate(
+        ["posts", post.id],
+        await pb.collection("posts").update(post.id, updateData)
+      );
+    } catch {}
+    setRecentlyPressDisLike((v) => !v);
   };
 
   return (
@@ -131,8 +148,28 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
         <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
           {post.content}
         </Text>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.Count}>{post.dislikes}</Text>
+
+          <TouchableOpacity
+            style={{ marginRight: 12 }}
+            onPressOut={onPressDisLike}
+          >
+            <AntDesign
+              name={recentlyAddDisLikes ? "dislike1" : "dislike2"}
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
+
           <Text style={styles.Count}>{post.likes}</Text>
+
           <TouchableOpacity onPressOut={onPressLike}>
             <AntDesign
               name={recentlyAddLikes ? "like1" : "like2"}

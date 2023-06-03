@@ -1,69 +1,44 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useLayoutEffect } from "react";
 import {
-  Text,
-  ScrollView,
   FlatList,
   View,
   RefreshControl,
-  Button,
-  Pressable,
   StyleSheet,
+  Pressable,
 } from "react-native";
-import dayjs from "../plugins/dayjs";
 import { usePostLists } from "../plugins/posts";
-import { Post, Document } from "../types/post";
 import { N } from "../types/navigation";
 import { FAB, TextInput } from "react-native-paper";
+import PostComponent from "../components/PostComponent";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-function PostComponent({
-  item,
-  onPress,
-}: { item: Document<Post> } & {
-  onPress: () => void;
-}) {
-  return (
-    <Pressable onPress={onPress}>
-      <View
-        style={{
-          backgroundColor: "white",
-          borderRadius: 10,
-          padding: 20,
-          marginBottom: 20,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 24,
-            fontFamily: "Athiti_700Bold", // Use the Athiti_700Bold font
-          }}
-        >
-          {item.title}
-        </Text>
-        <Text
-          style={{
-            fontFamily: "Athiti_400Regular",
-            fontSize: 16,
-            color: "gray",
-            paddingVertical: 5,
-          }}
-        >
-          สร้างเมื่อ {dayjs(item.created).format("LLL น.")}
-        </Text>
-        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
-          {item.content}
-        </Text>
-      </View>
-    </Pressable>
-  );
-}
-
-function HomeScreen({ navigation, route }: N<"Home">) {
+function HomeScreen({ navigation }: N<"Home">) {
   const [search, setSearch] = useState<string>("");
-  const { data, isLoading, mutate } = usePostLists();
+  const { data, isLoading, isValidating, mutate } = usePostLists();
   const items = useMemo(() => {
     if (search === "") return data;
     return data.filter((item) => item.title.includes(search));
   }, [search, data]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <View style={{ flexDirection: "row" }}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Leaderboard");
+              }}
+              style={styles.HeaderRightBtn}
+            >
+              <MaterialCommunityIcons name="podium" size={24} color="black" />
+            </Pressable>
+          </View>
+        );
+      },
+    });
+  }, []);
+
   return (
     <View style={{ height: "100%", backgroundColor: "#F3E9E9" }}>
       <View style={{ padding: 20 }}>
@@ -87,7 +62,10 @@ function HomeScreen({ navigation, route }: N<"Home">) {
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={mutate} />
+          <RefreshControl
+            refreshing={isLoading || isValidating}
+            onRefresh={mutate}
+          />
         }
         keyExtractor={(item) => item.id}
       />
@@ -106,6 +84,9 @@ const styles = StyleSheet.create({
     margin: 20,
     right: 0,
     bottom: 0,
+  },
+  HeaderRightBtn: {
+    padding: 10,
   },
 });
 

@@ -37,11 +37,13 @@ export default function AddScreen({
       title,
       content,
     };
-    if (post) {
-      await pb.collection("posts").update(post.id, newPost);
-    } else {
-      await pb.collection("posts").create(newPost);
-    }
+    try {
+      if (post) {
+        await pb.collection("posts").update(post.id, newPost);
+      } else {
+        await pb.collection("posts").create(newPost);
+      }
+    } catch {}
     mutate("posts");
     navigation.goBack();
   };

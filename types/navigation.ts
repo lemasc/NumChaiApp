@@ -5,6 +5,7 @@ export type RootStackParamList = {
   Add: undefined;
   View: { postId: string };
   Edit: { postId: string };
+  Leaderboard: undefined;
 };
 
 export type N<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
