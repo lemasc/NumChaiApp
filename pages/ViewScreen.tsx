@@ -1,30 +1,49 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import pb from "../plugins/pocketbase";
 import { N } from "../types/navigation";
 import { Post, Document } from "../types/post";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import dayjs from "../plugins/dayjs";
 import { AntDesign } from "@expo/vector-icons";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import { usePost } from "../plugins/posts";
+import { useSWRConfig } from "swr";
 
 export default function ViewScreen({ navigation, route }: N<"View">) {
-  const [post, setPost] = useState<Document<Post>>();
   const { postId } = route.params ?? {};
-  const getData = async () => {
-    const post = await pb.collection("posts").getOne<Document<Post>>(postId);
-    setPost(post);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const { mutate } = useSWRConfig();
+  const { data: post } = usePost(postId ?? null);
+  const [recentlyAddLikes, setRecentlyPressLike] = useState(false);
 
   if (!post) {
     return null;
   }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Edit", {
+                postId,
+              });
+            }}
+          >
+            <Text>Edit</Text>
+          </Pressable>
+        );
+      },
+    });
+  }, [postId]);
 
   const styles = StyleSheet.create({
-    
-
     Title: {
       textAlign: "center",
       fontSize: 25,
@@ -45,9 +64,20 @@ export default function ViewScreen({ navigation, route }: N<"View">) {
       padding: 15,
     },
     View: {
-      backgroundColor: "#F3E9E9"
-    }
+      backgroundColor: "#F3E9E9",
+    },
   });
+
+  const onPressLike = async () => {
+    const updateData: Partial<Post> = {
+      likes: recentlyAddLikes ? post.likes - 1 : post.likes + 1,
+    };
+    mutate(
+      ["posts", post.id],
+      await pb.collection("posts").update(post.id, updateData)
+    );
+    setRecentlyPressLike((v) => !v);
+  };
 
   return (
     <ScrollView style={styles.View}>
