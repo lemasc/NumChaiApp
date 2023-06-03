@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./pages/HomeScreen";
 import { RootStackParamList } from "./types/navigation";
 import AddScreen from "./pages/AddScreen";
+import ViewScreen from "./pages/ViewScreen";
 import { theme } from "./plugins/theme";
 import { SWRConfig } from "swr";
 import { swrConfig } from "./plugins/swr";
@@ -26,6 +27,12 @@ export default function App() {
               name="Add"
               component={AddScreen}
               options={{ title: "Add" }}
+            />
+
+            <Stack.Screen
+              name="View"
+              component={ViewScreen}
+              options={{ title: "View" }}
             />
           </Stack.Navigator>
         </NavigationContainer>

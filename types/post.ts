@@ -4,7 +4,7 @@ export type Document<T extends Record<string, unknown>> = T & {
   updated: string;
 };
 
-export type Post = Document<{
+export type Post = {
   title: string;
   content: string;
-}>;
+};

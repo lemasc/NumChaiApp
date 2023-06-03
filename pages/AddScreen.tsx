@@ -56,11 +56,13 @@ export default function AddScreen({
     title: {
       margin: 12,
       fontSize: 15,
+      borderRadius: 10,
     },
 
     content: {
       margin: 12,
       fontSize: 15,
+      borderRadius: 10,
     },
 
     btn: {

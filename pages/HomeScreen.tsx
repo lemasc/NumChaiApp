@@ -6,41 +6,59 @@ import {
   View,
   RefreshControl,
   Button,
+  Pressable,
   StyleSheet,
 } from "react-native";
 import dayjs from "../plugins/dayjs";
 import { usePostLists } from "../plugins/posts";
-import { Post } from "../types/post";
-
+import { Post, Document } from "../types/post";
+import { N } from "../types/navigation";
 import { FAB } from "react-native-paper";
 
-function PostComponent({ item }: { item: Post }) {
+function PostComponent({
+  item,
+  onPress,
+}: { item: Document<Post> } & {
+  onPress: () => void;
+}) {
   return (
-    <View
-      style={{
-        backgroundColor: "white",
-        borderRadius: 10,
-        padding: 20,
-        marginBottom: 20,
-      }}
-    >
-      <Text style={{ fontWeight: "bold", fontSize: 24, paddingBottom: 10 }}>
-        {item.title}
-      </Text>
-      <Text>สร้างเมื่อ {dayjs(item.created).format("LLL น.")}</Text>
-      <Text>{item.content}</Text>
-    </View>
+    <Pressable onPress={onPress}>
+      <View
+        style={{
+          backgroundColor: "white",
+          borderRadius: 10,
+          padding: 20,
+          marginBottom: 20,
+        }}
+      >
+        <Text style={{ fontWeight: "bold", fontSize: 24, paddingBottom: 10 }}>
+          {item.title}
+        </Text>
+        <Text>สร้างเมื่อ {dayjs(item.created).format("LLL น.")}</Text>
+        <Text>{item.content}</Text>
+      </View>
+    </Pressable>
   );
 }
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation, route }: N<"Home">) {
   const { data, isLoading, mutate } = usePostLists();
   return (
     <View style={{ height: "100%" }}>
       <FlatList
         style={{ padding: 18, paddingBottom: 20 }}
         data={data}
-        renderItem={PostComponent}
+        renderItem={({ item }) => (
+          <PostComponent
+            item={item}
+            onPress={() => {
+              console.log("HWEL");
+              navigation.navigate("View", {
+                postId: item.id,
+              });
+            }}
+          />
+        )}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={mutate} />
         }
