@@ -1,50 +1,65 @@
-import React, { useState } from "react";
-import { View, Button, TextInput, StyleSheet, Text } from "react-native";
-import pb from "../plugins/pocketbase";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text, Alert } from "react-native";
 
-export default function AddScreen({ navigation }) {
+import { TextInput, Button } from "react-native-paper";
+import { useSWRConfig } from "swr";
+import pb from "../plugins/pocketbase";
+import { N } from "../types/navigation";
+import { Document, Post } from "../types/post";
+
+export default function AddScreen({
+  navigation,
+  post,
+}: (N<"Add"> | N<"Edit">) & {
+  post?: Document<Post>;
+}) {
+  const { mutate } = useSWRConfig();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const cancle = async () => {
+  const cancel = async () => {
     navigation.navigate("Home");
   };
 
-  const getData = async () => {};
+  useEffect(() => {
+    return () => {
+      if (post) {
+        setTitle(post.title);
+        setContent(post.content);
+      }
+    };
+  }, [post]);
 
-  const post = async () => {
+  const submitPost = async () => {
+    if (!title || !content) {
+      Alert.alert("You must provide a title and a content for a post!.");
+      return;
+    }
     const newPost = {
       title,
       content,
     };
-    const record = await pb.collection("todo").create(newPost);
+    const record = await pb.collection("posts").create(newPost);
     console.log(record);
-    setTitle("");
-    setContent("");
-    getData();
-    navigation.goBack("Home");
+    mutate("posts");
+    navigation.goBack();
   };
 
   const styles = StyleSheet.create({
     header: {
       textAlign: "center",
       fontSize: 25,
-      marginTop: 15,
+      marginTop: 25,
+      fontWeight: "bold",
     },
 
     title: {
-      height: 40,
       margin: 12,
-      borderWidth: 1,
-      padding: 10,
       fontSize: 15,
     },
 
     content: {
       margin: 12,
-      borderWidth: 1,
-      padding: 10,
-      height: 120,
       fontSize: 15,
     },
 
@@ -52,12 +67,18 @@ export default function AddScreen({ navigation }) {
       width: "100%",
       flexDirection: "row",
       alignItems: "stretch",
+      paddingHorizontal: 10,
+    },
+    btnWrapper: {
+      padding: 5,
+      flexGrow: 1,
+      flexShrink: 1,
     },
   });
 
   return (
     <View>
-      <Text style={styles.header}>เพิ่มโพสต์</Text>
+      <Text style={styles.header}>{post ? "แก้ไข" : "เพิ่ม"}โพสต์</Text>
 
       <TextInput
         style={styles.title}
@@ -71,15 +92,20 @@ export default function AddScreen({ navigation }) {
         onChangeText={setContent}
         value={content}
         placeholder="เนื้อหา"
+        multiline
       />
 
       <View style={styles.btn}>
-        <View style={{ flexGrow: 1 }}>
-          <Button title="ยกเลิก" onPress={cancle} />
+        <View style={styles.btnWrapper}>
+          <Button mode="outlined" onPress={cancel}>
+            ยกเลิก
+          </Button>
         </View>
 
-        <View style={{ flexGrow: 1 }}>
-          <Button title="โพสต์" onPress={post} />
+        <View style={styles.btnWrapper}>
+          <Button mode="contained" onPress={submitPost}>
+            โพสต์
+          </Button>
         </View>
       </View>
     </View>

@@ -36,8 +36,9 @@ function PostComponent({ item }: { item: Post }) {
 function HomeScreen({ navigation }) {
   const { data, isLoading, mutate } = usePostLists();
   return (
-    <View style={{ padding: 18, height: "100%" }}>
+    <View style={{ height: "100%" }}>
       <FlatList
+        style={{ padding: 18, paddingBottom: 20 }}
         data={data}
         renderItem={PostComponent}
         refreshControl={
