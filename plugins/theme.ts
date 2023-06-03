@@ -15,19 +15,6 @@ const { LightTheme } = adaptNavigationTheme({
   reactNavigationDark: NavigationDarkTheme,
 });
 
-const navigationTheme = merge(MD3LightTheme, LightTheme);
-
-const theme = merge(navigationTheme, {
-  fonts: configureFonts({
-    config: {
-      default: {
-        fontFamily: "Athiti_400Regular",
-        fontWeight: "400",
-        letterSpacing: 0,
-        lineHeight: 1.5,
-      },
-    },
-  }),
-});
+const theme = merge(MD3LightTheme, LightTheme);
 
 export { theme };
