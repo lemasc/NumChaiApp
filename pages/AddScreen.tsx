@@ -18,7 +18,7 @@ export default function AddScreen({
   const [content, setContent] = useState("");
 
   const cancel = async () => {
-    navigation.navigate("Home");
+    navigation.goBack();
   };
 
   useEffect(() => {

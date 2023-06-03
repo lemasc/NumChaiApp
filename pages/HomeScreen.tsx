@@ -34,13 +34,19 @@ function PostComponent({
         <Text
           style={{
             fontSize: 24,
-            paddingBottom: 10,
             fontFamily: "Athiti_700Bold", // Use the Athiti_700Bold font
           }}
         >
           {item.title}
         </Text>
-        <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
+        <Text
+          style={{
+            fontFamily: "Athiti_400Regular",
+            fontSize: 16,
+            color: "gray",
+            paddingVertical: 5,
+          }}
+        >
           สร้างเมื่อ {dayjs(item.created).format("LLL น.")}
         </Text>
         <Text style={{ fontFamily: "Athiti_400Regular", fontSize: 16 }}>
@@ -62,7 +68,6 @@ function HomeScreen({ navigation, route }: N<"Home">) {
     <View style={{ height: "100%", backgroundColor: "#F3E9E9" }}>
       <View style={{ padding: 20 }}>
         <TextInput
-          style={{ fontFamily: "Athiti_400Regular" }}
           label="ค้นหา"
           value={search}
           onChangeText={(text) => setSearch(text.trim())}
