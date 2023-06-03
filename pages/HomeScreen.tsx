@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Text,
   ScrollView,
@@ -13,7 +13,7 @@ import dayjs from "../plugins/dayjs";
 import { usePostLists } from "../plugins/posts";
 import { Post, Document } from "../types/post";
 import { N } from "../types/navigation";
-import { FAB } from "react-native-paper";
+import { FAB, TextInput } from "react-native-paper";
 
 function PostComponent({
   item,
@@ -42,12 +42,24 @@ function PostComponent({
 }
 
 function HomeScreen({ navigation, route }: N<"Home">) {
+  const [search, setSearch] = useState<string>("");
   const { data, isLoading, mutate } = usePostLists();
+  const items = useMemo(() => {
+    if (search === "") return data;
+    return data.filter((item) => item.title.includes(search));
+  }, [search, data]);
   return (
     <View style={{ height: "100%" }}>
+      <View style={{ padding: 20 }}>
+        <TextInput
+          label="ค้นหา"
+          value={search}
+          onChangeText={(text) => setSearch(text.trim())}
+        />
+      </View>
       <FlatList
         style={{ padding: 18, paddingBottom: 20 }}
-        data={data}
+        data={items}
         renderItem={({ item }) => (
           <PostComponent
             item={item}
