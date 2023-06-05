@@ -5,7 +5,7 @@
 
 This is the repository of NumChaiApp, a cool social media mobile application, designed for free-speech. Made with in the ITCAMP19 MobilAnt Camp.
 
-> ✨ View the full presentation [here](./presentation/resentation.pdf).
+> ✨ View the full presentation [here](./presentation/presentation.pdf).
 
 ![UI Overview 1](./presentation/ui-screenshot-1.png)
 
